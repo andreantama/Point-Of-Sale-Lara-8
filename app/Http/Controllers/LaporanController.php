@@ -14,16 +14,21 @@ class LaporanController extends Controller
     {
         $tanggalAwal = date('Y-m-d', mktime(0, 0, 0, date('m'), 1, date('Y')));
         $tanggalAkhir = date('Y-m-d');
+        $metodepembayaranpenjualan = 'all';
 
         if ($request->has('tanggal_awal') && $request->tanggal_awal != "" && $request->has('tanggal_akhir') && $request->tanggal_akhir) {
             $tanggalAwal = $request->tanggal_awal;
             $tanggalAkhir = $request->tanggal_akhir;
         }
 
-        return view('laporan.index', compact('tanggalAwal', 'tanggalAkhir'));
+        if($request->has('metodepembayaranpenjualan')) {
+            $metodepembayaranpenjualan = $request->metodepembayaranpenjualan;
+        }
+
+        return view('laporan.index', compact('tanggalAwal', 'tanggalAkhir', 'metodepembayaranpenjualan'));
     }
 
-    public function getData($awal, $akhir)
+    public function getData($awal, $akhir, $metodepembayaranpenjualan)
     {
         $no = 1;
         $data = array();
@@ -31,10 +36,17 @@ class LaporanController extends Controller
         $total_pendapatan = 0;
 
         while (strtotime($awal) <= strtotime($akhir)) {
+
+
             $tanggal = $awal;
             $awal = date('Y-m-d', strtotime("+1 day", strtotime($awal)));
 
-            $total_penjualan = Penjualan::where('created_at', 'LIKE', "%$tanggal%")->sum('bayar');
+            $total_penjualan = Penjualan::where('created_at', 'LIKE', "%$tanggal%");
+            if($metodepembayaranpenjualan != 'all') {
+                $total_penjualan->where('metodepembayaran', $metodepembayaranpenjualan);
+            }
+            $total_penjualan = $total_penjualan->sum('bayar');
+
             $total_pembelian = Pembelian::where('created_at', 'LIKE', "%$tanggal%")->sum('bayar');
             $total_pengeluaran = Pengeluaran::where('created_at', 'LIKE', "%$tanggal%")->sum('nominal');
 
@@ -44,6 +56,7 @@ class LaporanController extends Controller
             $row = array();
             $row['DT_RowIndex'] = $no++;
             $row['tanggal'] = tanggal_indonesia($tanggal, false);
+            $row['metodepembayaranpenjualan'] = $metodepembayaranpenjualan != 'all' ? $metodepembayaranpenjualan  : 'Tunai & Transfer';
             $row['penjualan'] = format_uang($total_penjualan);
             $row['pembelian'] = format_uang($total_pembelian);
             $row['pengeluaran'] = format_uang($total_pengeluaran);
@@ -55,6 +68,7 @@ class LaporanController extends Controller
         $data[] = [
             'DT_RowIndex' => '',
             'tanggal' => '',
+            'metodepembayaranpenjualan' => '',
             'penjualan' => '',
             'pembelian' => '',
             'pengeluaran' => 'Total Pendapatan',
@@ -64,21 +78,21 @@ class LaporanController extends Controller
         return $data;
     }
 
-    public function data($awal, $akhir)
+    public function data($awal, $akhir, $metodepembayaranpenjualan)
     {
-        $data = $this->getData($awal, $akhir);
+        $data = $this->getData($awal, $akhir, $metodepembayaranpenjualan);
 
         return datatables()
             ->of($data)
             ->make(true);
     }
 
-    public function exportPDF($awal, $akhir)
+    public function exportPDF($awal, $akhir, $metodepembayaranpenjualan)
     {
-        $data = $this->getData($awal, $akhir);
+        $data = $this->getData($awal, $akhir, $metodepembayaranpenjualan);
         $pdf  = PDF::loadView('laporan.pdf', compact('awal', 'akhir', 'data'));
         $pdf->setPaper('a4', 'potrait');
-        
+
         return $pdf->stream('Laporan-pendapatan-'. date('Y-m-d-his') .'.pdf');
     }
 }

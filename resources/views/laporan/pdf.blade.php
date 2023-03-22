@@ -21,6 +21,7 @@
             <tr>
                 <th width="5%">No</th>
                 <th>Tanggal</th>
+                <th>Meteode Pembayaran<br>Penjualan</th>
                 <th>Penjualan</th>
                 <th>Pembelian</th>
                 <th>Pengeluaran</th>

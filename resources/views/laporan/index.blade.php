@@ -19,13 +19,14 @@
         <div class="box">
             <div class="box-header with-border">
                 <button onclick="updatePeriode()" class="btn btn-info btn-xs btn-flat"><i class="fa fa-plus-circle"></i> Ubah Periode</button>
-                <a href="{{ route('laporan.export_pdf', [$tanggalAwal, $tanggalAkhir]) }}" target="_blank" class="btn btn-success btn-xs btn-flat"><i class="fa fa-file-excel-o"></i> Export PDF</a>
+                <a href="{{ route('laporan.export_pdf', [$tanggalAwal, $tanggalAkhir, $metodepembayaranpenjualan]) }}" target="_blank" class="btn btn-success btn-xs btn-flat"><i class="fa fa-file-excel-o"></i> Export PDF</a>
             </div>
             <div class="box-body table-responsive">
                 <table class="table table-stiped table-bordered">
                     <thead>
                         <th width="5%">No</th>
                         <th>Tanggal</th>
+                        <th>Meteode Pembayaran<br>Penjualan</th>
                         <th>Penjualan</th>
                         <th>Pembelian</th>
                         <th>Pengeluaran</th>
@@ -50,11 +51,12 @@
             processing: true,
             autoWidth: false,
             ajax: {
-                url: '{{ route('laporan.data', [$tanggalAwal, $tanggalAkhir]) }}',
+                url: '{{ route('laporan.data', [$tanggalAwal, $tanggalAkhir, $metodepembayaranpenjualan]) }}',
             },
             columns: [
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
                 {data: 'tanggal'},
+                {data: 'metodepembayaranpenjualan'},
                 {data: 'penjualan'},
                 {data: 'pembelian'},
                 {data: 'pengeluaran'},

@@ -26,6 +26,16 @@
                             <span class="help-block with-errors"></span>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label for="tanggal_akhir" class="col-lg-2 col-lg-offset-1 control-label">Metode Pembayaran Penjualan</label>
+                        <div class="col-lg-6">
+                            <select name="metodepembayaranpenjualan" class="form-control">
+                                <option value="all" {{ $metodepembayaranpenjualan == 'all' ? 'selected' : '' }}>Semua</option>
+                                <option value="Tunai" {{ $metodepembayaranpenjualan == 'Tunai' ? 'selected' : '' }}>Tunai</option>
+                                <option value="Transfer" {{ $metodepembayaranpenjualan == 'Transfer' ? 'selected' : '' }}>Transfer</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-save"></i> Simpan</button>
