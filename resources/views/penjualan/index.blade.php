@@ -19,6 +19,7 @@
                         <th width="5%">No</th>
                         <th>Tanggal</th>
                         <th>Kode Member</th>
+                        <th>Meteode Pembayaran</th>
                         <th>Total Item</th>
                         <th>Total Harga</th>
                         <th>Diskon</th>
@@ -50,6 +51,7 @@
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
                 {data: 'tanggal'},
                 {data: 'kode_member'},
+                {data: 'metodepembayaran'},
                 {data: 'total_item'},
                 {data: 'total_harga'},
                 {data: 'diskon'},
@@ -66,6 +68,7 @@
             columns: [
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
                 {data: 'kode_produk'},
+                {data: 'metodepembayaran'},
                 {data: 'nama_produk'},
                 {data: 'harga_jual'},
                 {data: 'jumlah'},
